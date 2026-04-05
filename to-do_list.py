@@ -15,7 +15,8 @@ def main_menu():
         print("1. Add a task")
         print("2. view tasks")
         print("3. delete tasks")
-        print("4. quit")
+        print("4. clear input.txt")
+        print("5. quit")
         go_to=input("Where would you like to go: ")
                     
         try:
@@ -30,7 +31,9 @@ def main_menu():
                 del_tasks()
 
             elif (x == 4 ):
-                
+                clear_data()
+
+            elif (x == 5 ):
                 quit()
 
         except ValueError:
@@ -40,25 +43,36 @@ def main_menu():
 def add_task():
     while(True):
         currentTask = input("what task would you like to add: ")
-        addtasks.append(currentTask)
-        txt_data = currentTask + "\n"
+        taskPriority = input("what is the priority of this task? [HIGH, MEDIUM, LOW] ")
+        
+        while True:
+            if (taskPriority.upper() == "HIGH" or taskPriority.upper() == "MEDIUM" or taskPriority.upper() == "LOW"):
+                break
+            
+            else:
+                print("please use a provided a valid input")
+                taskPriority = input("what is the priority of this task? [HIGH, MEDIUM, LOW] ")
+
+        status = "INCOMPLETE"
+
+        addtasks.append(currentTask + " | " +  taskPriority + " | " + status)
+        txt_data = currentTask + " | " +  taskPriority + " | " + status + "\n"
 
         with open(file_path, "a") as file:
             file.write(txt_data)
             print(f"txt file '{file_path}' has been saved")
 
-
         response = input("would you like to add another task y/n ")
+
         if (response.lower() == "y"):
-            len(addtasks)
+            continue
 
         elif(response.lower() == "n"):
             break
-
+            
         else:
             print("please use a provided a valid input")
-
-    return
+            response = input("would you like to add another task y/n ")
 
 def view_task():
 
@@ -71,8 +85,8 @@ def view_task():
         print(i," ", x)
 
     while(True):
-        uin = input("press y when you would like to go back to the main menu ")
-        if (uin.lower() == "y"):
+        uin = input("press q when you would like to go back to the main menu ")
+        if (uin.lower() == "q"):
             break
 
         else:
@@ -96,7 +110,7 @@ def del_tasks():
                         i+=1
                         print(i," ", x)
 
-                    with open("input.txt", "w") as file:
+                    with open(file_path, "w") as file:
                         print("tasks have been updated")
                         for task in addtasks:
                             file.write(task + "\n")
@@ -111,5 +125,11 @@ def del_tasks():
             break
     return
             
+def clear_data():
+    open(file_path, "w").close()
+    addtasks.clear()
+    print("All tasks cleared")
+    return
+
 file_path = "input.txt"    
 main_menu()
